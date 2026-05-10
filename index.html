@@ -287,13 +287,7 @@ button { cursor: pointer; border: none; background: none; }
 <div class="setup" id="setup">
   <div class="setup-logo">
     <div class="setup-logo-icon">
-      <svg viewBox="0 0 100 100" fill="none">
-        <polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#444" stroke="#666" stroke-width="2"/>
-        <line x1="50" y1="4" x2="7" y2="72" stroke="#666" stroke-width="2"/>
-        <line x1="50" y1="4" x2="93" y2="72" stroke="#666" stroke-width="2"/>
-        <line x1="7" y1="38" x2="93" y2="38" stroke="#666" stroke-width="2"/>
-        <line x1="7" y1="60" x2="93" y2="60" stroke="#666" stroke-width="2"/>
-      </svg>
+      <img src="https://dl.dropboxusercontent.com/scl/fi/noi9olk0xc92w4et660gb/Grace-Church-Logo-Solid.png?rlkey=88o1b5y2npm1khsumujl13ik9&st=n9rhpiux" alt="Grace Church" style="width:100%;height:100%;object-fit:contain;border-radius:inherit;"/>
     </div>
     <div class="setup-logo-name">Grace Church</div>
     <div class="setup-logo-sub">Media Hub · Avon</div>
@@ -314,13 +308,7 @@ button { cursor: pointer; border: none; background: none; }
   <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-logo">
-      <svg viewBox="0 0 100 100" fill="none">
-        <polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#444" stroke="#666" stroke-width="2"/>
-        <line x1="50" y1="4" x2="7" y2="72" stroke="#666" stroke-width="2"/>
-        <line x1="50" y1="4" x2="93" y2="72" stroke="#666" stroke-width="2"/>
-        <line x1="7" y1="38" x2="93" y2="38" stroke="#666" stroke-width="2"/>
-        <line x1="7" y1="60" x2="93" y2="60" stroke="#666" stroke-width="2"/>
-      </svg>
+      <img src="https://dl.dropboxusercontent.com/scl/fi/noi9olk0xc92w4et660gb/Grace-Church-Logo-Solid.png?rlkey=88o1b5y2npm1khsumujl13ik9&st=n9rhpiux" alt="Grace Church" style="width:100%;height:100%;object-fit:contain;border-radius:inherit;"/>
     </div>
     <div>
       <div class="topbar-name">Grace Church</div>
@@ -628,13 +616,21 @@ async function doConnect() {
 }
 
 async function findTodaysPlan() {
-  // PCO requires going through service types to get plans
+  // Find the correct service type by name
+  const TARGET = 'weekend worship service - avon - 101 wales ave';
   const stData = await pco('/services/v2/service_types?per_page=25');
   const serviceTypes = stData.data || [];
   if (!serviceTypes.length) throw new Error('No service types found');
 
-  // Search each service type for today's plan first
-  for (const st of serviceTypes) {
+  // Find matching service type (case-insensitive)
+  const match = serviceTypes.find(st =>
+    st.attributes.name.toLowerCase().includes('avon') ||
+    st.attributes.name.toLowerCase().includes('weekend worship')
+  );
+  const targetTypes = match ? [match] : serviceTypes;
+
+  // Search for today's plan
+  for (const st of targetTypes) {
     const plansData = await pco(`/services/v2/service_types/${st.id}/plans?order=sort_date&per_page=10`);
     const plans = plansData.data || [];
     const todayPlan = plans.find(p => {
@@ -649,8 +645,8 @@ async function findTodaysPlan() {
     }
   }
 
-  // Fallback: next upcoming plan across all service types
-  for (const st of serviceTypes) {
+  // Fallback: next upcoming plan in that service type
+  for (const st of targetTypes) {
     const plansData = await pco(`/services/v2/service_types/${st.id}/plans?filter=future&order=sort_date&per_page=1`);
     if (plansData.data && plansData.data.length > 0) {
       planId = plansData.data[0].id;
@@ -660,7 +656,7 @@ async function findTodaysPlan() {
     }
   }
 
-  throw new Error('No plans found in Planning Center');
+  throw new Error('No plans found for Weekend Worship Service - Avon');
 }
 
 async function loadPlan() {
