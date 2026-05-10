@@ -659,7 +659,7 @@ async function loadPlan() {
 }
 
 async function loadItems() {
-  if (!creds || !planId) return;
+  if (!planId) return;
   try {
     const d = await pco('/services/v2/plans/' + planId + '/items?per_page=100');
     renderROS(d.data || []);
@@ -845,9 +845,12 @@ function changePass() {
 
 // ── INIT ── auto-launch with PCO, no credentials needed from volunteers
 window.addEventListener('load', () => {
-  // Always launch with PCO - credentials are server-side
   launchApp(true);
   renderAllChecklists();
+  findTodaysPlan().catch(e => {
+    console.error('Could not load plan:', e);
+    document.getElementById('heroDate').textContent = 'Could not load plan — check PCO connection';
+  });
 });
 </script>
 </body>
