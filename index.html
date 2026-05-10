@@ -628,23 +628,39 @@ async function doConnect() {
 }
 
 async function findTodaysPlan() {
-  // Find plan matching today's date
-  const start = todayISO + 'T00:00:00Z';
-  const end = todayISO + 'T23:59:59Z';
-  const data = await pco(`/services/v2/plans?where[sort_date][gte]=${start}&where[sort_date][lte]=${end}&order=sort_date&per_page=5`);
-  if (data.data && data.data.length > 0) {
-    planId = data.data[0].id;
-  } else {
-    // Fallback: get next upcoming plan
-    const upcoming = await pco('/services/v2/plans?filter=future&order=sort_date&per_page=1');
-    if (upcoming.data && upcoming.data.length > 0) {
-      planId = upcoming.data[0].id;
-    } else {
-      throw new Error('No plans found');
+  // PCO requires going through service types to get plans
+  const stData = await pco('/services/v2/service_types?per_page=25');
+  const serviceTypes = stData.data || [];
+  if (!serviceTypes.length) throw new Error('No service types found');
+
+  // Search each service type for today's plan first
+  for (const st of serviceTypes) {
+    const plansData = await pco(`/services/v2/service_types/${st.id}/plans?order=sort_date&per_page=10`);
+    const plans = plansData.data || [];
+    const todayPlan = plans.find(p => {
+      const d = p.attributes.sort_date;
+      return d && d.startsWith(todayISO);
+    });
+    if (todayPlan) {
+      planId = todayPlan.id;
+      ss('gc_plan', planId);
+      await loadPlan();
+      return;
     }
   }
-  ss('gc_plan', planId);
-  await loadPlan();
+
+  // Fallback: next upcoming plan across all service types
+  for (const st of serviceTypes) {
+    const plansData = await pco(`/services/v2/service_types/${st.id}/plans?filter=future&order=sort_date&per_page=1`);
+    if (plansData.data && plansData.data.length > 0) {
+      planId = plansData.data[0].id;
+      ss('gc_plan', planId);
+      await loadPlan();
+      return;
+    }
+  }
+
+  throw new Error('No plans found in Planning Center');
 }
 
 async function loadPlan() {
