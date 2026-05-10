@@ -1,11 +1,22 @@
 exports.handler = async function (event) {
-  const { path, appId, secret } = JSON.parse(event.body || '{}');
+  // Use env vars server-side — credentials never exposed to volunteers
+  const appId = process.env.PCO_APP_ID;
+  const secret = process.env.PCO_SECRET;
 
-  if (!path || !appId || !secret) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Missing params' }) };
+  // Allow admin override from request body if provided
+  const body = JSON.parse(event.body || '{}');
+  const finalId = body.appId || appId;
+  const finalSecret = body.secret || secret;
+  const path = body.path;
+
+  if (!path) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing path' }) };
+  }
+  if (!finalId || !finalSecret) {
+    return { statusCode: 500, body: JSON.stringify({ error: 'PCO credentials not configured' }) };
   }
 
-  const base64 = Buffer.from(`${appId}:${secret}`).toString('base64');
+  const base64 = Buffer.from(`${finalId}:${finalSecret}`).toString('base64');
 
   try {
     const res = await fetch(`https://api.planningcenteronline.com${path}`, {
@@ -14,9 +25,7 @@ exports.handler = async function (event) {
         'Content-Type': 'application/json',
       },
     });
-
     const data = await res.json();
-
     return {
       statusCode: res.status,
       headers: { 'Content-Type': 'application/json' },
