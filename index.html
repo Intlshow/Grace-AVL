@@ -297,6 +297,22 @@ button { cursor: pointer; border: none; background: none; }
 .log-prog { font-size: 12px; color: var(--green); margin-top: 3px; font-weight: 500; }
 .no-items { font-size: 13px; color: var(--text3); font-style: italic; padding: 8px 0; }
 .adm-logout { margin-top: 1.5rem; }
+
+/* ── SERVICE TABS (checklist) ── */
+.svc-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.svc-tab {
+  flex: 1; min-width: 80px; background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 10px 8px; cursor: pointer; text-align: center;
+  transition: all 0.15s; box-shadow: var(--shadow-sm);
+}
+.svc-tab:hover { border-color: var(--gold-mid); }
+.svc-tab.active { background: var(--gold-light); border-color: var(--gold-mid); }
+.svc-tab-day { display: block; font-size: 12px; font-weight: 700; color: var(--text); }
+.svc-tab.active .svc-tab-day { color: var(--gold); }
+.svc-tab-date { display: block; font-size: 11px; color: var(--text3); margin-top: 1px; }
+.svc-tab.active .svc-tab-date { color: var(--gold-mid); }
+.svc-tab-today { display: block; font-size: 10px; color: var(--green); font-weight: 600; margin-top: 2px; }
+.svc-tab-loading { font-size: 12px; color: var(--text3); font-style: italic; padding: 8px 0; }
 </style>
 </head>
 <body>
@@ -407,7 +423,7 @@ button { cursor: pointer; border: none; background: none; }
         </div>
         <div class="ros-items" id="rosItemsWrap"><div class="ros-empty">Loading run of show...</div></div>
         <div class="ros-status">
-          <div class="ros-status-note" id="rosStatusNote">Auto-refreshing every 15s</div>
+          <div class="ros-status-note" id="rosStatusNote">Auto-refreshing every 30s</div>
           <button class="ros-refresh" onclick="loadItems()">Refresh ↻</button>
         </div>
       </div>
@@ -426,15 +442,8 @@ button { cursor: pointer; border: none; background: none; }
         <div class="cl-selectors">
           <div class="cl-field">
             <label>Service</label>
-            <select id="mediaSvc">
-              <option value="">— Select your service —</option>
-              <option>Saturday 4:00 PM</option>
-              <option>Saturday 5:30 PM</option>
-              <option>Sunday 8:30 AM</option>
-              <option>Sunday 10:00 AM</option>
-              <option>Sunday 11:30 AM</option>
-              <option>Sunday 1:00 PM</option>
-            </select>
+            <div class="svc-tabs" id="mediaSvcTabs"><div class="svc-tab-loading">Loading services...</div></div>
+            <input type="hidden" id="mediaSvc"/>
           </div>
           <div class="cl-field">
             <label>Your Name</label>
@@ -471,15 +480,8 @@ button { cursor: pointer; border: none; background: none; }
         <div class="cl-selectors">
           <div class="cl-field">
             <label>Service</label>
-            <select id="audioSvc">
-              <option value="">— Select your service —</option>
-              <option>Saturday 4:00 PM</option>
-              <option>Saturday 5:30 PM</option>
-              <option>Sunday 8:30 AM</option>
-              <option>Sunday 10:00 AM</option>
-              <option>Sunday 11:30 AM</option>
-              <option>Sunday 1:00 PM</option>
-            </select>
+            <div class="svc-tabs" id="audioSvcTabs"><div class="svc-tab-loading">Loading services...</div></div>
+            <input type="hidden" id="audioSvc"/>
           </div>
           <div class="cl-field">
             <label>Your Name</label>
@@ -649,17 +651,20 @@ async function findTodaysPlan() {
   );
   const targetTypes = match ? [match] : serviceTypes;
 
-  // Load 5 upcoming plans from today forward
+  // Load upcoming plans, filter to Saturday & Sunday only
   for (const st of targetTypes) {
-    // filter=future gets plans from today forward, order=sort_date ascending
-    const plansData = await pco(`/services/v2/service_types/${st.id}/plans?filter=future&order=sort_date&per_page=5`);
+    const plansData = await pco(`/services/v2/service_types/${st.id}/plans?filter=future&order=sort_date&per_page=20`);
     const plans = plansData.data || [];
     if (plans.length) {
-      allPlans = plans;
-      // Default to the first plan (closest to today)
-      activePlanIdx = 0;
-      // Check if first plan is actually today
-      const firstDate = allPlans[0].attributes.sort_date || '';
+      // Keep only Sat (6) and Sun (0) plans
+      const weekend = plans.filter(p => {
+        if (!p.attributes.sort_date) return false;
+        const day = new Date(p.attributes.sort_date).getUTCDay();
+        return day === 0 || day === 6;
+      });
+      // Take next 5 weekend services
+      allPlans = weekend.slice(0, 5);
+      if (!allPlans.length) allPlans = plans.slice(0, 5); // fallback
       activePlanIdx = allPlans.findIndex(p => p.attributes.sort_date && p.attributes.sort_date.startsWith(todayISO));
       if (activePlanIdx < 0) activePlanIdx = 0;
       planId = allPlans[activePlanIdx].id;
@@ -685,6 +690,39 @@ function renderPlanTabs() {
       <span class="plan-tab-sub">${sub}</span>
     </button>`;
   }).join('');
+  // Also update checklist service tabs
+  renderChecklistSvcTabs();
+}
+
+function renderChecklistSvcTabs() {
+  ['media', 'audio'].forEach(dept => {
+    const wrap = document.getElementById(dept + 'SvcTabs');
+    if (!wrap) return;
+    if (!allPlans.length) {
+      wrap.innerHTML = '<div class="svc-tab-loading">No services loaded</div>';
+      return;
+    }
+    wrap.innerHTML = allPlans.map((p, i) => {
+      const d = p.attributes.sort_date ? new Date(p.attributes.sort_date) : null;
+      const isToday = p.attributes.sort_date && p.attributes.sort_date.startsWith(todayISO);
+      const dayName = d ? d.toLocaleDateString('en-US', { weekday: 'short' }) : '';
+      const dateLabel = d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Plan ' + (i+1);
+      const planTitle = p.attributes.series_title || p.attributes.title || dateLabel;
+      const val = `${dayName} ${dateLabel}${isToday ? ' (Today)' : ''}`;
+      const currentVal = document.getElementById(dept + 'Svc').value;
+      const isActive = currentVal === val;
+      return `<button class="svc-tab${isActive ? ' active' : ''}" onclick="selectSvc('${dept}','${val}')">
+        <span class="svc-tab-day">${dayName}</span>
+        <span class="svc-tab-date">${dateLabel}</span>
+        ${isToday ? '<span class="svc-tab-today">Today</span>' : ''}
+      </button>`;
+    }).join('');
+  });
+}
+
+function selectSvc(dept, val) {
+  document.getElementById(dept + 'Svc').value = val;
+  renderChecklistSvcTabs();
 }
 
 async function switchPlan(idx) {
@@ -742,7 +780,7 @@ function launchApp(hasPCO) {
   if (hasPCO) {
     document.getElementById('rosNoPCO').classList.add('hidden');
     document.getElementById('rosLive').classList.remove('hidden');
-    rosTick = setInterval(loadItems, 15000);
+    rosTick = setInterval(autoRefresh, 30000);
   }
   // Set date display
   document.getElementById('dateChip').textContent = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
