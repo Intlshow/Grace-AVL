@@ -4,251 +4,494 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Grace Church · Media Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
-:root{--dark:#111110;--mid:#1a1917;--card:#1e1d1b;--border:#2a2926;--gold:#c9a84c;--gold-dim:rgba(201,168,76,0.1);--gold-border:rgba(201,168,76,0.25);--text:#f0ede8;--muted:#7a7875;--green:#22c55e;--green-bg:rgba(34,197,94,0.1);--green-border:rgba(34,197,94,0.25);--red:#f87171;--red-bg:rgba(248,113,113,0.08);--blue:#60a5fa;--blue-bg:rgba(96,165,250,0.1);--blue-border:rgba(96,165,250,0.25);}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
-input,button,select{font-family:'DM Sans',sans-serif;}
-button{cursor:pointer;}
-.hidden{display:none!important;}
+:root {
+  --bg: #f7f5f2;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --border: #e4dfd8;
+  --gold: #b8922e;
+  --gold-light: #f5e9ce;
+  --gold-mid: #d4a843;
+  --text: #1c1a17;
+  --text2: #6b6560;
+  --text3: #9c9590;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --green-border: #86efac;
+  --blue: #2563eb;
+  --blue-light: #dbeafe;
+  --blue-border: #93c5fd;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.06);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+input, button, select, textarea { font-family: 'DM Sans', sans-serif; }
+button { cursor: pointer; border: none; background: none; }
+.hidden { display: none !important; }
 
-/* SETUP */
-.setup-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;}
-.setup-logo{display:flex;align-items:center;gap:12px;margin-bottom:2.5rem;}
-.logo-icon{width:48px;height:48px;background:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.logo-icon.sm{width:32px;height:32px;border-radius:6px;}
-.logo-icon svg{width:32px;height:32px;}
-.logo-icon.sm svg{width:22px;height:22px;}
-.logo-text .name{font-size:20px;font-weight:600;}
-.logo-text .sub{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:1px;}
-.setup-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:2rem;width:100%;max-width:400px;}
-.setup-card h2{font-size:16px;font-weight:500;margin-bottom:6px;}
-.setup-card p{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5;}
-.field{margin-bottom:1rem;}
-.field label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
-.field input,.field select{width:100%;background:var(--mid);border:0.5px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:10px 12px;}
-.field input:focus,.field select:focus{outline:none;border-color:var(--gold);}
-.field input::placeholder{color:var(--muted);}
-.field select option{background:var(--mid);}
-.btn{display:block;width:100%;padding:11px;border:none;border-radius:7px;font-size:14px;font-weight:600;transition:opacity .15s;}
-.btn:hover{opacity:.88;}
-.btn:disabled{opacity:.45;cursor:not-allowed;}
-.btn-gold{background:var(--gold);color:#111;}
-.btn-outline{background:none;border:0.5px solid var(--border);color:var(--muted);}
-.btn-red{background:var(--red-bg);border:0.5px solid rgba(248,113,113,.2);color:var(--red);}
-.err-box{display:none;margin-top:10px;padding:9px 12px;background:var(--red-bg);border:0.5px solid rgba(248,113,113,.2);border-radius:7px;font-size:12px;color:var(--red);}
-.success-box{display:none;margin-top:10px;padding:9px 12px;background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:7px;font-size:12px;color:var(--green);}
+/* ── SETUP ── */
+.setup {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 2rem 1.25rem;
+  background: linear-gradient(160deg, #fff8ee 0%, #f7f5f2 60%);
+}
+.setup-logo { text-align: center; margin-bottom: 2.5rem; }
+.setup-logo-icon {
+  width: 72px; height: 72px; background: #111; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+  box-shadow: var(--shadow);
+}
+.setup-logo-icon svg { width: 46px; height: 46px; }
+.setup-logo-name { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.setup-logo-sub { font-size: 13px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+.setup-card {
+  background: var(--surface); border-radius: var(--radius); padding: 2rem;
+  width: 100%; max-width: 420px; box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+}
+.setup-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.setup-card p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 1.5rem; }
+.field { margin-bottom: 1rem; }
+.field label { display: block; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.field input, .field select {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-size: 14px; padding: 11px 14px;
+  transition: border-color 0.15s;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--gold-mid); }
+.field input::placeholder { color: var(--text3); }
+.btn { display: block; width: 100%; padding: 13px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; transition: all 0.15s; border: none; }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-gold { background: linear-gradient(135deg, var(--gold-mid), var(--gold)); color: #fff; box-shadow: 0 2px 8px rgba(184,146,46,0.35); }
+.btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text2); }
+.btn-ghost:hover { background: var(--bg); }
+.err-box { display: none; margin-top: 10px; padding: 10px 14px; background: var(--red-light); border: 1px solid #fca5a5; border-radius: var(--radius-sm); font-size: 13px; color: var(--red); }
+.suc-box { display: none; margin-top: 10px; padding: 10px 14px; background: var(--green-light); border: 1px solid var(--green-border); border-radius: var(--radius-sm); font-size: 13px; color: var(--green); }
 
-/* APP */
-.app-shell{display:none;min-height:100vh;flex-direction:column;}
-.topbar{background:var(--mid);border-bottom:0.5px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;}
-.topbar .logo-text .name{font-size:14px;}
-.topbar .logo-text .sub{font-size:11px;}
-.live-pill{margin-left:auto;display:flex;align-items:center;gap:5px;background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--green);font-weight:500;}
-.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--mid);border-top:0.5px solid var(--border);display:flex;z-index:20;}
-.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border:none;background:none;gap:4px;transition:color .15s;}
-.nav-tab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.nav-tab.active{color:var(--gold);}
-.page-content{flex:1;padding-bottom:70px;}
-.page{display:none;}
-.page.active{display:block;}
+/* ── APP SHELL ── */
+.app { display: none; min-height: 100vh; flex-direction: column; background: var(--bg); }
+.topbar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 30; box-shadow: var(--shadow-sm);
+}
+.topbar-logo { width: 36px; height: 36px; background: #111; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.topbar-logo svg { width: 24px; height: 24px; }
+.topbar-name { font-size: 15px; font-weight: 600; }
+.topbar-sub { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.back-btn { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--gold); font-weight: 500; padding: 6px 10px; border-radius: 7px; background: var(--gold-light); }
+.back-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.date-chip { font-size: 12px; color: var(--text2); background: var(--surface2); border-radius: 99px; padding: 4px 12px; font-weight: 500; }
 
-/* RUN OF SHOW */
-.now-panel{background:var(--gold-dim);border-bottom:0.5px solid var(--gold-border);padding:16px 20px;}
-.now-eye{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:5px;}
-.now-title{font-size:22px;font-weight:500;line-height:1.2;}
-.now-note{font-size:12px;color:rgba(201,168,76,.75);margin-top:5px;line-height:1.4;}
-.now-next{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(201,168,76,.15);}
-.now-next-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
-.now-next-val{font-size:13px;opacity:.65;}
-.plan-meta-bar{padding:10px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.plan-title-text{font-size:13px;font-weight:500;}
-.plan-date-text{font-size:11px;color:var(--muted);margin-top:1px;}
-.btn-sm{font-size:11px;color:var(--muted);background:none;border:0.5px solid var(--border);border-radius:5px;padding:4px 10px;}
-.items-wrap{padding:12px 20px;display:flex;flex-direction:column;gap:4px;}
-.section-label{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;padding:12px 0 5px;border-top:0.5px solid var(--border);margin-top:4px;}
-.section-label:first-child{border-top:none;padding-top:0;}
-.item-row{background:var(--card);border:0.5px solid var(--border);border-radius:7px;padding:10px 12px;display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;}
-.item-row.is-active{border-color:var(--gold);background:rgba(201,168,76,.06);}
-.item-seq{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;padding-top:2px;}
-.item-name{font-size:13px;font-weight:500;}
-.item-desc{font-size:11px;color:var(--muted);margin-top:2px;}
-.item-note{font-size:11px;color:rgba(201,168,76,.85);background:rgba(201,168,76,.07);border-radius:4px;padding:4px 8px;margin-top:6px;line-height:1.4;display:block;}
-.item-dur{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;padding-top:2px;}
-.status-bar{padding:10px 20px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--mid);}
-.status-note{font-size:11px;color:var(--muted);}
-.btn-text-gold{font-size:11px;color:var(--gold);background:none;border:none;}
-.loading-msg{text-align:center;padding:3rem 0;font-size:13px;color:var(--muted);}
-.pco-prompt{padding:24px 20px;}
-.pco-prompt h3{font-size:14px;font-weight:500;margin-bottom:6px;}
-.pco-prompt p{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+.page-content { padding-bottom: 20px; }
 
-/* CHECKLIST */
-.cl-header{padding:16px 20px;border-bottom:0.5px solid var(--border);}
-.cl-header h2{font-size:16px;font-weight:500;margin-bottom:3px;}
-.cl-header p{font-size:12px;color:var(--muted);}
-.cl-selectors{padding:14px 20px;border-bottom:0.5px solid var(--border);display:flex;flex-direction:column;gap:10px;}
-.dept-tabs{display:flex;gap:6px;}
-.dept-tab{flex:1;padding:9px;border-radius:7px;border:0.5px solid var(--border);background:none;color:var(--muted);font-size:13px;font-weight:500;transition:all .15s;}
-.dept-tab.media.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
-.dept-tab.audio.active{border-color:var(--blue);color:var(--blue);background:var(--blue-bg);}
-.name-row input{width:100%;background:var(--mid);border:0.5px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:9px 12px;}
-.name-row input:focus{outline:none;border-color:var(--gold);}
-.name-row input::placeholder{color:var(--muted);}
-.cl-body{padding:14px 20px;display:flex;flex-direction:column;gap:6px;}
-.check-item{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:all .15s;}
-.check-item.checked.media{border-color:var(--green-border);background:var(--green-bg);}
-.check-item.checked.audio{border-color:var(--blue-border);background:var(--blue-bg);}
-.chk{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s;}
-.check-item.checked.media .chk{background:var(--green);border-color:var(--green);}
-.check-item.checked.audio .chk{background:var(--blue);border-color:var(--blue);}
-.chk svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:none;}
-.check-item.checked .chk svg{display:block;}
-.chk-text{font-size:13px;line-height:1.5;flex:1;}
-.check-item.checked .chk-text{text-decoration:line-through;color:var(--muted);}
-.cl-footer{padding:14px 20px;border-top:0.5px solid var(--border);}
-.prog-wrap{height:4px;background:var(--border);border-radius:999px;margin-bottom:10px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:999px;transition:width .3s;}
-.prog-fill.media{background:var(--green);}
-.prog-fill.audio{background:var(--blue);}
-.prog-lbl{font-size:12px;color:var(--muted);margin-bottom:12px;}
-.done-banner{display:none;background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:8px;padding:14px;text-align:center;margin-bottom:10px;}
-.done-banner.audio{background:var(--blue-bg);border-color:var(--blue-border);}
-.done-banner .di{font-size:22px;margin-bottom:4px;}
-.done-banner .dt{font-size:14px;font-weight:500;color:var(--green);}
-.done-banner.audio .dt{color:var(--blue);}
-.done-banner .ds{font-size:12px;color:var(--muted);margin-top:2px;}
-.cl-btns{display:flex;flex-direction:column;gap:8px;}
+/* ── HOME PAGE ── */
+.home-hero {
+  background: linear-gradient(160deg, #111 0%, #2a2420 100%);
+  padding: 32px 20px 28px; color: #fff; position: relative; overflow: hidden;
+}
+.home-hero::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%);
+}
+.home-hero-location { font-size: 11px; color: rgba(201,168,76,0.8); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 6px; }
+.home-hero-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 6px; }
+.home-hero-date { font-size: 14px; color: rgba(255,255,255,0.6); }
+.home-hero-date span { color: rgba(201,168,76,0.9); font-weight: 500; }
 
-/* ADMIN */
-.adm-login{padding:24px 20px;}
-.adm-login h2{font-size:16px;font-weight:500;margin-bottom:6px;}
-.adm-login p{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5;}
-.adm-panel{padding:16px 20px;}
-.adm-tabs{display:flex;gap:4px;margin-bottom:16px;}
-.adm-tab{flex:1;padding:8px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:500;transition:all .15s;}
-.adm-tab.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
-.adm-section{margin-bottom:1.5rem;}
-.adm-section-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;padding-bottom:8px;border-top:0.5px solid var(--border);padding-top:10px;}
-.adm-section-title:first-child{border-top:none;padding-top:0;}
-.dept-head{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;margin-top:4px;}
-.adm-item{background:var(--card);border:0.5px solid var(--border);border-radius:7px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;}
-.adm-item-text{font-size:13px;flex:1;line-height:1.4;}
-.adm-del{background:none;border:none;color:var(--muted);font-size:20px;line-height:1;padding:0;}
-.adm-del:hover{color:var(--red);}
-.add-row{display:flex;gap:8px;margin-top:8px;}
-.add-row input{flex:1;background:var(--mid);border:0.5px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:9px 12px;}
-.add-row input:focus{outline:none;border-color:var(--gold);}
-.add-row input::placeholder{color:var(--muted);}
-.btn-add{background:var(--gold-dim);border:0.5px solid var(--gold-border);color:var(--gold);border-radius:7px;padding:9px 14px;font-size:13px;font-weight:500;white-space:nowrap;}
-.log-entry{background:var(--card);border:0.5px solid var(--border);border-radius:7px;padding:10px 12px;margin-bottom:4px;}
-.log-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
-.log-name{font-size:13px;font-weight:500;}
-.log-badge{font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:4px;}
-.log-badge.media{background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-border);}
-.log-badge.audio{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-border);}
-.log-meta{font-size:11px;color:var(--muted);}
-.log-prog{font-size:11px;color:var(--green);margin-top:3px;}
-.no-items{padding:8px 0;font-size:12px;color:var(--muted);font-style:italic;}
+.home-section { padding: 24px 20px 0; }
+.home-section-title { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+
+.home-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.home-card {
+  background: var(--surface); border-radius: var(--radius); padding: 20px 16px;
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  cursor: pointer; transition: all 0.2s; text-align: center; display: flex;
+  flex-direction: column; align-items: center; gap: 10px;
+}
+.home-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.home-card:active { transform: scale(0.97); }
+.home-card.full-width { grid-column: 1 / -1; flex-direction: row; text-align: left; gap: 16px; padding: 18px 20px; }
+.home-card-icon {
+  width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center;
+  justify-content: center; font-size: 24px; flex-shrink: 0;
+}
+.home-card.full-width .home-card-icon { width: 48px; height: 48px; border-radius: 12px; }
+.icon-gold { background: var(--gold-light); }
+.icon-green { background: var(--green-light); }
+.icon-blue { background: var(--blue-light); }
+.icon-dark { background: #1c1a17; }
+.home-card-label { font-size: 14px; font-weight: 600; color: var(--text); }
+.home-card-desc { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.home-card-arrow { margin-left: auto; color: var(--text3); }
+.home-card-arrow svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.admin-link { text-align: center; padding: 20px; }
+.admin-link button { font-size: 13px; color: var(--text3); text-decoration: underline; text-underline-offset: 3px; background: none; border: none; }
+
+/* ── RUN OF SHOW ── */
+.ros-now {
+  margin: 16px; background: linear-gradient(135deg, #1c1a17, #2e2a24);
+  border-radius: var(--radius); padding: 18px; color: #fff; box-shadow: var(--shadow);
+}
+.ros-now-eye { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold-mid); margin-bottom: 6px; }
+.ros-now-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+.ros-now-note { font-size: 12px; color: rgba(201,168,76,0.7); margin-top: 6px; line-height: 1.5; }
+.ros-now-next { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+.ros-now-lbl { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; }
+.ros-now-val { font-size: 13px; color: rgba(255,255,255,0.65); }
+
+.ros-plan-bar { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+.ros-plan-title { font-size: 14px; font-weight: 600; }
+.ros-plan-date { font-size: 12px; color: var(--text2); margin-top: 1px; }
+.ros-items { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+.ros-section { font-size: 10px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 0 4px; border-top: 1px solid var(--border); margin-top: 4px; }
+.ros-section:first-child { border-top: none; padding-top: 0; }
+.ros-item {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 14px;
+  display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: start;
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.ros-item.active { border-color: var(--gold-mid); background: var(--gold-light); }
+.ros-item-seq { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; padding-top: 1px; }
+.ros-item-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.ros-item-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.ros-item-note { font-size: 11px; color: var(--gold); background: var(--gold-light); border-radius: 5px; padding: 4px 8px; margin-top: 6px; line-height: 1.4; display: block; border: 1px solid rgba(184,146,46,0.2); }
+.ros-item-dur { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; white-space: nowrap; padding-top: 2px; }
+.ros-status { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); background: var(--surface); }
+.ros-status-note { font-size: 12px; color: var(--text3); }
+.ros-refresh { font-size: 12px; color: var(--gold); font-weight: 500; }
+.ros-empty { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 14px; }
+
+/* ── CHECKLIST ── */
+.cl-hero {
+  padding: 20px 20px 24px; border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.cl-hero-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.cl-hero-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.cl-hero-title { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.cl-hero-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+.cl-selectors { display: flex; flex-direction: column; gap: 10px; }
+.cl-field label { display: block; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.cl-field select, .cl-field input {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-size: 14px; padding: 11px 14px;
+}
+.cl-field select:focus, .cl-field input:focus { outline: none; border-color: var(--gold-mid); }
+.cl-field input::placeholder { color: var(--text3); }
+
+.cl-progress-bar { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 14px; }
+.cl-progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+.cl-progress-fill.media { background: linear-gradient(90deg, var(--gold-mid), var(--gold)); }
+.cl-progress-fill.audio { background: linear-gradient(90deg, #3b82f6, var(--blue)); }
+.cl-progress-text { font-size: 12px; color: var(--text2); margin-top: 6px; }
+
+.cl-items { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.cl-item {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 14px 16px; display: flex; align-items: flex-start; gap: 14px; cursor: pointer;
+  transition: all 0.2s; box-shadow: var(--shadow-sm);
+}
+.cl-item:active { transform: scale(0.98); }
+.cl-item.done.media { border-color: var(--green-border); background: var(--green-light); }
+.cl-item.done.audio { border-color: var(--blue-border); background: var(--blue-light); }
+.cl-checkbox {
+  width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  margin-top: 1px; transition: all 0.2s;
+}
+.cl-item.done.media .cl-checkbox { background: var(--green); border-color: var(--green); }
+.cl-item.done.audio .cl-checkbox { background: var(--blue); border-color: var(--blue); }
+.cl-checkbox svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; display: none; }
+.cl-item.done .cl-checkbox svg { display: block; }
+.cl-item-text { font-size: 14px; line-height: 1.5; color: var(--text); flex: 1; }
+.cl-item.done .cl-item-text { text-decoration: line-through; color: var(--text3); }
+
+.cl-footer { padding: 16px; }
+.cl-done-banner {
+  display: none; background: var(--green-light); border: 1.5px solid var(--green-border);
+  border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 14px;
+}
+.cl-done-banner.audio { background: var(--blue-light); border-color: var(--blue-border); }
+.cl-done-icon { font-size: 36px; margin-bottom: 8px; }
+.cl-done-title { font-size: 18px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.cl-done-banner.audio .cl-done-title { color: var(--blue); }
+.cl-done-sub { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.cl-btns { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── ADMIN ── */
+.adm-login { padding: 24px 20px; max-width: 420px; margin: 0 auto; }
+.adm-login h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.adm-login p { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; line-height: 1.6; }
+.adm-panel { padding: 16px 20px; }
+.adm-tabs { display: flex; gap: 6px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+.adm-tab { flex: 1; padding: 8px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--text2); transition: all 0.15s; }
+.adm-tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+.adm-section { margin-bottom: 1.5rem; }
+.adm-section-head { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.adm-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 11px 14px; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px;
+  box-shadow: var(--shadow-sm);
+}
+.adm-item-text { font-size: 13px; flex: 1; line-height: 1.5; }
+.adm-del { color: var(--text3); font-size: 20px; line-height: 1; flex-shrink: 0; }
+.adm-del:hover { color: var(--red); }
+.add-row { display: flex; gap: 8px; margin-top: 8px; }
+.add-row input {
+  flex: 1; background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-size: 13px; padding: 10px 14px;
+}
+.add-row input:focus { outline: none; border-color: var(--gold-mid); }
+.add-row input::placeholder { color: var(--text3); }
+.btn-add {
+  background: var(--gold-light); border: 1px solid rgba(184,146,46,0.3);
+  color: var(--gold); border-radius: var(--radius-sm); padding: 10px 16px;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+}
+.log-entry {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px 14px; margin-bottom: 6px; box-shadow: var(--shadow-sm);
+}
+.log-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.log-name { font-size: 14px; font-weight: 600; }
+.log-badge { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 5px; }
+.log-badge.media { background: var(--gold-light); color: var(--gold); }
+.log-badge.audio { background: var(--blue-light); color: var(--blue); }
+.log-meta { font-size: 12px; color: var(--text2); }
+.log-prog { font-size: 12px; color: var(--green); margin-top: 3px; font-weight: 500; }
+.no-items { font-size: 13px; color: var(--text3); font-style: italic; padding: 8px 0; }
+.adm-logout { margin-top: 1.5rem; }
 </style>
 </head>
 <body>
 
-<!-- SETUP -->
-<div class="setup-screen" id="setupScreen">
+<!-- ══ SETUP ══ -->
+<div class="setup" id="setup">
   <div class="setup-logo">
-    <div class="logo-icon">
-      <svg viewBox="0 0 100 100" fill="none"><polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#333" stroke="#555" stroke-width="2"/><line x1="50" y1="4" x2="7" y2="72" stroke="#555" stroke-width="2"/><line x1="50" y1="4" x2="93" y2="72" stroke="#555" stroke-width="2"/><line x1="7" y1="38" x2="93" y2="38" stroke="#555" stroke-width="2"/><line x1="7" y1="60" x2="93" y2="60" stroke="#555" stroke-width="2"/></svg>
+    <div class="setup-logo-icon">
+      <svg viewBox="0 0 100 100" fill="none">
+        <polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#444" stroke="#666" stroke-width="2"/>
+        <line x1="50" y1="4" x2="7" y2="72" stroke="#666" stroke-width="2"/>
+        <line x1="50" y1="4" x2="93" y2="72" stroke="#666" stroke-width="2"/>
+        <line x1="7" y1="38" x2="93" y2="38" stroke="#666" stroke-width="2"/>
+        <line x1="7" y1="60" x2="93" y2="60" stroke="#666" stroke-width="2"/>
+      </svg>
     </div>
-    <div class="logo-text"><div class="name">Grace Church</div><div class="sub">Media Hub</div></div>
+    <div class="setup-logo-name">Grace Church</div>
+    <div class="setup-logo-sub">Media Hub · Avon</div>
   </div>
   <div class="setup-card">
-    <h2>Connect your service plan</h2>
-    <p>Get your Personal Access Token at <strong style="color:var(--text)">planningcenteronline.com → Developer</strong></p>
-    <div class="field"><label>Application ID</label><input type="text" id="inputId" placeholder="Your PCO App ID" autocomplete="off"/></div>
-    <div class="field"><label>Secret</label><input type="password" id="inputSecret" placeholder="Your PCO Secret"/></div>
-    <div class="field"><label>Plan ID</label><input type="text" id="inputPlan" value="87852859"/></div>
+    <h2>Connect to Planning Center</h2>
+    <p>Get your Personal Access Token at <strong>planningcenteronline.com → Developer → Personal Access Tokens</strong></p>
+    <div class="field"><label>Application ID</label><input type="text" id="inId" placeholder="Your PCO App ID" autocomplete="off"/></div>
+    <div class="field"><label>Secret</label><input type="password" id="inSec" placeholder="Your PCO Secret"/></div>
     <div class="err-box" id="setupErr"></div>
-    <button class="btn btn-gold" id="btnConnect" onclick="doConnect()">Connect to Plan</button>
-    <button class="btn btn-outline" style="margin-top:8px" onclick="skipSetup()">Checklist Only (No PCO)</button>
+    <button class="btn btn-gold" id="btnConn" onclick="doConnect()" style="margin-bottom:10px">Connect</button>
+    <button class="btn btn-ghost" onclick="skipSetup()">Checklist Only (No PCO)</button>
   </div>
 </div>
 
-<!-- APP -->
-<div class="app-shell" id="appShell">
+<!-- ══ APP ══ -->
+<div class="app" id="app">
+  <!-- Topbar -->
   <div class="topbar">
-    <div class="logo-icon sm">
-      <svg viewBox="0 0 100 100" fill="none"><polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#333" stroke="#555" stroke-width="2"/><line x1="50" y1="4" x2="7" y2="72" stroke="#555" stroke-width="2"/><line x1="50" y1="4" x2="93" y2="72" stroke="#555" stroke-width="2"/><line x1="7" y1="38" x2="93" y2="38" stroke="#555" stroke-width="2"/><line x1="7" y1="60" x2="93" y2="60" stroke="#555" stroke-width="2"/></svg>
+    <div class="topbar-logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <polygon points="50,4 93,28 93,72 50,96 7,72 7,28" fill="#444" stroke="#666" stroke-width="2"/>
+        <line x1="50" y1="4" x2="7" y2="72" stroke="#666" stroke-width="2"/>
+        <line x1="50" y1="4" x2="93" y2="72" stroke="#666" stroke-width="2"/>
+        <line x1="7" y1="38" x2="93" y2="38" stroke="#666" stroke-width="2"/>
+        <line x1="7" y1="60" x2="93" y2="60" stroke="#666" stroke-width="2"/>
+      </svg>
     </div>
-    <div class="logo-text"><div class="name">Grace Church</div><div class="sub">Media Hub · Avon</div></div>
-    <div class="live-pill"><div class="live-dot"></div>Live</div>
+    <div>
+      <div class="topbar-name">Grace Church</div>
+      <div class="topbar-sub">Media Hub · Avon</div>
+    </div>
+    <div class="topbar-right">
+      <button class="back-btn hidden" id="backBtn" onclick="goHome()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Home
+      </button>
+      <div class="date-chip" id="dateChip"></div>
+    </div>
   </div>
 
   <div class="page-content">
 
-    <!-- RUN OF SHOW -->
-    <div class="page active" id="pageROS">
-      <div id="rosPCO" class="hidden">
-        <div id="nowPanel" style="display:none" class="now-panel">
-          <div class="now-eye">Now Playing</div>
-          <div class="now-title" id="nowTitle">—</div>
-          <div class="now-note" id="nowNote"></div>
-          <div class="now-next"><span class="now-next-lbl">Up next</span><span class="now-next-val" id="nextTitle">—</span></div>
-        </div>
-        <div class="plan-meta-bar">
-          <div><div class="plan-title-text" id="planTitle">Loading...</div><div class="plan-date-text" id="planDate"></div></div>
-          <button class="btn-sm" onclick="goSetup()">Disconnect</button>
-        </div>
-        <div class="items-wrap" id="itemsWrap"><div class="loading-msg">Loading run of show...</div></div>
-        <div class="status-bar">
-          <div class="status-note" id="statusNote">Auto-refreshing every 15s</div>
-          <button class="btn-text-gold" onclick="loadItems()">Refresh</button>
+    <!-- HOME -->
+    <div class="page active" id="pageHome">
+      <div class="home-hero">
+        <div class="home-hero-location">📍 Avon Campus</div>
+        <div class="home-hero-title">Good to see you,<br>team! 👋</div>
+        <div class="home-hero-date" id="heroDate">Loading today's plan...</div>
+      </div>
+
+      <div class="home-section">
+        <div class="home-section-title">Service Tools</div>
+        <div class="home-cards">
+          <div class="home-card" onclick="showPage('ROS')">
+            <div class="home-card-icon icon-gold">📋</div>
+            <div class="home-card-label">Run of Show</div>
+            <div class="home-card-desc">Live service plan & cues</div>
+          </div>
+          <div class="home-card" onclick="showPage('MediaCL')">
+            <div class="home-card-icon icon-green">📽</div>
+            <div class="home-card-label">Media</div>
+            <div class="home-card-desc">Pre-service checklist</div>
+          </div>
+          <div class="home-card full-width" onclick="showPage('AudioCL')">
+            <div class="home-card-icon icon-blue">🎚</div>
+            <div>
+              <div class="home-card-label">Audio Checklist</div>
+              <div class="home-card-desc">Board, mics, amp, scene check</div>
+            </div>
+            <div class="home-card-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
       </div>
-      <div id="rosPrompt" class="pco-prompt">
-        <h3>Not connected to Planning Center</h3>
-        <p>Connect your PCO account to see the live run of show.</p>
-        <button class="btn btn-gold" onclick="goSetup()">Connect PCO</button>
+
+      <div class="admin-link">
+        <button onclick="showPage('Admin')">Team Lead Admin ↗</button>
       </div>
     </div>
 
-    <!-- CHECKLIST -->
-    <div class="page" id="pageChecklist">
-      <div class="cl-header"><h2>Service Checklist</h2><p>Avon Campus · Complete before service begins</p></div>
-      <div class="cl-selectors">
-        <div class="dept-tabs">
-          <button class="dept-tab media active" id="dtMedia" onclick="setDept('media')">📽 Media</button>
-          <button class="dept-tab audio" id="dtAudio" onclick="setDept('audio')">🎚 Audio</button>
-        </div>
-        <div class="field" style="margin:0">
-          <label>Service</label>
-          <select id="svcSelect">
-            <option value="">— Select service —</option>
-            <option>Saturday 4:00 PM</option>
-            <option>Saturday 5:30 PM</option>
-            <option>Sunday 8:30 AM</option>
-            <option>Sunday 10:00 AM</option>
-            <option>Sunday 11:30 AM</option>
-            <option>Sunday 1:00 PM</option>
-          </select>
-        </div>
-        <div class="name-row"><input type="text" id="volName" placeholder="Your name" autocomplete="off"/></div>
+    <!-- RUN OF SHOW -->
+    <div class="page" id="pageROS">
+      <div id="rosNoPCO" class="ros-empty">
+        <p style="font-size:40px;margin-bottom:12px">🔌</p>
+        <p style="font-weight:600;margin-bottom:6px">Not connected to Planning Center</p>
+        <p style="font-size:13px;margin-bottom:20px">Connect your PCO account to see the live run of show.</p>
+        <button class="btn btn-gold" style="max-width:220px;margin:0 auto" onclick="goSetup()">Connect PCO</button>
       </div>
-      <div class="cl-body" id="clBody"></div>
+      <div id="rosLive" class="hidden">
+        <div id="nowPanel" class="ros-now" style="display:none">
+          <div class="ros-now-eye">Now Playing</div>
+          <div class="ros-now-title" id="nowTitle">—</div>
+          <div class="ros-now-note" id="nowNote"></div>
+          <div class="ros-now-next">
+            <span class="ros-now-lbl">Up next</span>
+            <span class="ros-now-val" id="nextTitle">—</span>
+          </div>
+        </div>
+        <div class="ros-plan-bar">
+          <div>
+            <div class="ros-plan-title" id="planTitle">Loading...</div>
+            <div class="ros-plan-date" id="planDate"></div>
+          </div>
+        </div>
+        <div class="ros-items" id="rosItemsWrap"><div class="ros-empty">Loading run of show...</div></div>
+        <div class="ros-status">
+          <div class="ros-status-note" id="rosStatusNote">Auto-refreshing every 15s</div>
+          <button class="ros-refresh" onclick="loadItems()">Refresh ↻</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDIA CHECKLIST -->
+    <div class="page" id="pageMediaCL">
+      <div class="cl-hero">
+        <div class="cl-hero-top">
+          <div class="cl-hero-icon icon-gold">📽</div>
+          <div>
+            <div class="cl-hero-title">Media Checklist</div>
+            <div class="cl-hero-sub">Complete before service begins</div>
+          </div>
+        </div>
+        <div class="cl-selectors">
+          <div class="cl-field">
+            <label>Service</label>
+            <select id="mediaSvc">
+              <option value="">— Select your service —</option>
+              <option>Saturday 4:00 PM</option>
+              <option>Saturday 5:30 PM</option>
+              <option>Sunday 8:30 AM</option>
+              <option>Sunday 10:00 AM</option>
+              <option>Sunday 11:30 AM</option>
+              <option>Sunday 1:00 PM</option>
+            </select>
+          </div>
+          <div class="cl-field">
+            <label>Your Name</label>
+            <input type="text" id="mediaName" placeholder="First and last name" autocomplete="off"/>
+          </div>
+        </div>
+        <div class="cl-progress-bar"><div class="cl-progress-fill media" id="mediaProgFill" style="width:0%"></div></div>
+        <div class="cl-progress-text" id="mediaProgText">0 of 0 complete</div>
+      </div>
+      <div class="cl-items" id="mediaItems"></div>
       <div class="cl-footer">
-        <div class="prog-wrap"><div class="prog-fill media" id="progFill" style="width:0%"></div></div>
-        <div class="prog-lbl" id="progLbl">0 of 0 complete</div>
-        <div class="done-banner" id="doneBanner">
-          <div class="di">✅</div>
-          <div class="dt">Checklist Complete</div>
-          <div class="ds" id="doneSubtext"></div>
+        <div class="cl-done-banner" id="mediaDone">
+          <div class="cl-done-icon">✅</div>
+          <div class="cl-done-title">Media Check Complete!</div>
+          <div class="cl-done-sub" id="mediaDoneSub"></div>
         </div>
         <div class="cl-btns">
-          <button class="btn btn-gold" id="btnSubmit" onclick="submitCL()">Mark as Complete</button>
-          <button class="btn btn-outline" onclick="resetCL()">Reset</button>
+          <button class="btn btn-gold" id="mediaSubmit" onclick="submitCL('media')">Mark as Complete</button>
+          <button class="btn btn-ghost" onclick="resetCL('media')">Reset Checklist</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIO CHECKLIST -->
+    <div class="page" id="pageAudioCL">
+      <div class="cl-hero">
+        <div class="cl-hero-top">
+          <div class="cl-hero-icon icon-blue">🎚</div>
+          <div>
+            <div class="cl-hero-title">Audio Checklist</div>
+            <div class="cl-hero-sub">Complete before service begins</div>
+          </div>
+        </div>
+        <div class="cl-selectors">
+          <div class="cl-field">
+            <label>Service</label>
+            <select id="audioSvc">
+              <option value="">— Select your service —</option>
+              <option>Saturday 4:00 PM</option>
+              <option>Saturday 5:30 PM</option>
+              <option>Sunday 8:30 AM</option>
+              <option>Sunday 10:00 AM</option>
+              <option>Sunday 11:30 AM</option>
+              <option>Sunday 1:00 PM</option>
+            </select>
+          </div>
+          <div class="cl-field">
+            <label>Your Name</label>
+            <input type="text" id="audioName" placeholder="First and last name" autocomplete="off"/>
+          </div>
+        </div>
+        <div class="cl-progress-bar"><div class="cl-progress-fill audio" id="audioProgFill" style="width:0%"></div></div>
+        <div class="cl-progress-text" id="audioProgText">0 of 0 complete</div>
+      </div>
+      <div class="cl-items" id="audioItems"></div>
+      <div class="cl-footer">
+        <div class="cl-done-banner audio" id="audioDone">
+          <div class="cl-done-icon">✅</div>
+          <div class="cl-done-title">Audio Check Complete!</div>
+          <div class="cl-done-sub" id="audioDoneSub"></div>
+        </div>
+        <div class="cl-btns">
+          <button class="btn btn-gold" id="audioSubmit" onclick="submitCL('audio')">Mark as Complete</button>
+          <button class="btn btn-ghost" onclick="resetCL('audio')">Reset Checklist</button>
         </div>
       </div>
     </div>
@@ -260,7 +503,8 @@ button{cursor:pointer;}
         <p>Sign in to manage checkpoints and view submission logs.</p>
         <div class="field"><label>Password</label><input type="password" id="admPassIn" placeholder="Admin password" onkeydown="if(event.key==='Enter')admLogin()"/></div>
         <div class="err-box" id="admErr"></div>
-        <button class="btn btn-gold" onclick="admLogin()">Sign In</button>
+        <button class="btn btn-gold" onclick="admLogin()" style="margin-bottom:8px">Sign In</button>
+        <button class="btn btn-ghost" onclick="goHome()">Back to Home</button>
       </div>
       <div id="admPanel" class="adm-panel hidden">
         <div class="adm-tabs">
@@ -268,317 +512,342 @@ button{cursor:pointer;}
           <button class="adm-tab" id="atLogs" onclick="showATab('Logs')">Logs</button>
           <button class="adm-tab" id="atSettings" onclick="showATab('Settings')">Settings</button>
         </div>
+
         <div id="aTabCheckpoints">
           <div class="adm-section">
-            <div class="dept-head">📽 Media Checkpoints</div>
+            <div class="adm-section-head">📽 Media Checkpoints</div>
             <div id="admMediaList"></div>
-            <div class="add-row"><input type="text" id="newMediaIn" placeholder="Add a media checkpoint..." onkeydown="if(event.key==='Enter')addItem('media')"/><button class="btn-add" onclick="addItem('media')">Add</button></div>
+            <div class="add-row">
+              <input type="text" id="newMediaIn" placeholder="Add a media checkpoint..." onkeydown="if(event.key==='Enter')addItem('media')"/>
+              <button class="btn-add" onclick="addItem('media')">Add</button>
+            </div>
           </div>
           <div class="adm-section">
-            <div class="adm-section-title"></div>
-            <div class="dept-head">🎚 Audio Checkpoints</div>
+            <div class="adm-section-head">🎚 Audio Checkpoints</div>
             <div id="admAudioList"></div>
-            <div class="add-row"><input type="text" id="newAudioIn" placeholder="Add an audio checkpoint..." onkeydown="if(event.key==='Enter')addItem('audio')"/><button class="btn-add" onclick="addItem('audio')">Add</button></div>
+            <div class="add-row">
+              <input type="text" id="newAudioIn" placeholder="Add an audio checkpoint..." onkeydown="if(event.key==='Enter')addItem('audio')"/>
+              <button class="btn-add" onclick="addItem('audio')">Add</button>
+            </div>
           </div>
         </div>
+
         <div id="aTabLogs" class="hidden">
           <div class="adm-section">
-            <div class="dept-head">Recent Submissions</div>
+            <div class="adm-section-head">Recent Submissions</div>
             <div id="logsList"></div>
           </div>
         </div>
+
         <div id="aTabSettings" class="hidden">
           <div class="adm-section">
-            <div class="dept-head">Change Admin Password</div>
+            <div class="adm-section-head">Change Admin Password</div>
             <div class="field"><label>New Password</label><input type="password" id="newPassIn" placeholder="New password"/></div>
             <div class="field"><label>Confirm</label><input type="password" id="confPassIn" placeholder="Confirm password"/></div>
             <div class="err-box" id="passErr"></div>
-            <div class="success-box" id="passSuc"></div>
+            <div class="suc-box" id="passSuc"></div>
             <button class="btn btn-gold" onclick="changePass()">Update Password</button>
           </div>
-          <div class="adm-section" style="margin-top:1rem">
-            <button class="btn btn-red" onclick="admLogout()">Sign Out</button>
+          <div class="adm-section">
+            <div class="adm-section-head">PCO Connection</div>
+            <button class="btn btn-ghost" onclick="goSetup()">Reconnect Planning Center</button>
+          </div>
+          <div class="adm-logout">
+            <button class="btn" style="background:var(--red-light);color:var(--red);border:1px solid #fca5a5" onclick="admLogout()">Sign Out</button>
           </div>
         </div>
       </div>
     </div>
 
   </div>
-
-  <nav class="bottom-nav">
-    <button class="nav-tab active" id="navROS" onclick="showPage('ROS')">
-      <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-      Run of Show
-    </button>
-    <button class="nav-tab" id="navChecklist" onclick="showPage('Checklist')">
-      <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-      Checklist
-    </button>
-    <button class="nav-tab" id="navAdmin" onclick="showPage('Admin')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
-      Admin
-    </button>
-  </nav>
 </div>
 
 <script>
-const DEFAULT_PASS='Grace2024!';
-const DEFAULT_ITEMS={
-  media:[
+// ── DEFAULTS ──
+const DEFAULT_PASS = 'Grace2024!';
+const DEFAULT_ITEMS = {
+  media: [
     'Turn on projectors',
     'Open ProPresenter and confirm Sermon graphic matches on ProPresenter and Switcher computer',
     'Confirm Sermon light color matches the sermon graphic',
     'Check who is giving the message — set camera angle, height, and zoom for the speaker'
   ],
-  audio:[
+  audio: [
     'Make sure speaker control is on backstage',
     'Turn on board',
     'Make sure lobby speaker amp is powered on',
     'Test mics — confirm all mics have been charged',
     'Quick mic check — confirm all speakers are on',
-    'Check message scene settings — review flow of service for halftime, confirm which mic will be muted/unmuted for each transition'
+    'Check message scene settings — review flow of service for halftime and confirm which mic will be muted/unmuted for each transition'
   ]
 };
 
-let creds=null,planId='87852859',rosTick=null;
-let dept='media',checked={},admAuthed=false;
+// ── STATE ──
+let creds = null, planId = null, rosTick = null;
+let checked = { media: {}, audio: {} };
+let admAuthed = false;
+const today = new Date();
+const todayStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+const todayISO = today.toISOString().split('T')[0];
 
-function gs(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
-function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
-function getItems(){return gs('gc_items',JSON.parse(JSON.stringify(DEFAULT_ITEMS)));}
-function getPass(){return gs('gc_pass',DEFAULT_PASS);}
-function getLogs(){return gs('gc_logs',[]);}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function strip(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent||'';}
-function fmt(s){if(!s&&s!==0)return'';return Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);}
+// ── STORAGE ──
+function gs(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
+function ss(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+function getItems() { return gs('gc_items', JSON.parse(JSON.stringify(DEFAULT_ITEMS))); }
+function getPass() { return gs('gc_pass', DEFAULT_PASS); }
+function getLogs() { return gs('gc_logs', []); }
 
-// PCO
-async function pco(path){
-  const r=await fetch('/.netlify/functions/pco',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path,appId:creds.id,secret:creds.secret})});
-  if(!r.ok)throw new Error('HTTP '+r.status);
+// ── PCO ── credentials live server-side as Netlify env vars
+async function pco(path) {
+  const r = await fetch('/.netlify/functions/pco', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path })
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
   return r.json();
 }
 
-async function doConnect(){
-  const id=document.getElementById('inputId').value.trim();
-  const sec=document.getElementById('inputSecret').value.trim();
-  const pid=document.getElementById('inputPlan').value.trim();
-  const err=document.getElementById('setupErr');
-  const btn=document.getElementById('btnConnect');
-  err.style.display='none';
-  if(!id||!sec){err.textContent='Please enter both App ID and Secret.';err.style.display='block';return;}
-  creds={id,secret:sec};planId=pid;
-  btn.disabled=true;btn.textContent='Connecting...';
-  try{
-    await loadPlan();
-    ss('gc_creds',creds);ss('gc_plan',planId);
+async function doConnect() {
+  const id = document.getElementById('inId').value.trim();
+  const sec = document.getElementById('inSec').value.trim();
+  const err = document.getElementById('setupErr');
+  const btn = document.getElementById('btnConn');
+  err.style.display = 'none';
+  if (!id || !sec) { err.textContent = 'Please enter both App ID and Secret.'; err.style.display = 'block'; return; }
+  
+  btn.disabled = true; btn.textContent = 'Connecting...';
+  try {
+    await findTodaysPlan();
+    ss('gc_creds', creds);
     launchApp(true);
-  }catch(e){
-    err.textContent='Connection failed. Check your credentials. ('+e.message+')';
-    err.style.display='block';creds=null;
+  } catch (e) {
+    err.textContent = 'Connection failed. Check your credentials. (' + e.message + ')';
+    err.style.display = 'block'; creds = null;
   }
-  btn.disabled=false;btn.textContent='Connect to Plan';
+  btn.disabled = false; btn.textContent = 'Connect';
 }
 
-function skipSetup(){creds=null;launchApp(false);}
-
-function launchApp(hasPCO){
-  document.getElementById('setupScreen').style.display='none';
-  document.getElementById('appShell').style.display='flex';
-  if(hasPCO){
-    document.getElementById('rosPCO').classList.remove('hidden');
-    document.getElementById('rosPrompt').classList.add('hidden');
-    rosTick=setInterval(loadItems,15000);
+async function findTodaysPlan() {
+  // Find plan matching today's date
+  const start = todayISO + 'T00:00:00Z';
+  const end = todayISO + 'T23:59:59Z';
+  const data = await pco(`/services/v2/plans?where[sort_date][gte]=${start}&where[sort_date][lte]=${end}&order=sort_date&per_page=5`);
+  if (data.data && data.data.length > 0) {
+    planId = data.data[0].id;
+  } else {
+    // Fallback: get next upcoming plan
+    const upcoming = await pco('/services/v2/plans?filter=future&order=sort_date&per_page=1');
+    if (upcoming.data && upcoming.data.length > 0) {
+      planId = upcoming.data[0].id;
+    } else {
+      throw new Error('No plans found');
+    }
   }
-  showPage('Checklist');
+  ss('gc_plan', planId);
+  await loadPlan();
 }
 
-function goSetup(){
-  if(rosTick)clearInterval(rosTick);creds=null;
-  ss('gc_creds',null);
-  document.getElementById('appShell').style.display='none';
-  document.getElementById('setupScreen').style.display='flex';
-  document.getElementById('rosPCO').classList.add('hidden');
-  document.getElementById('rosPrompt').classList.remove('hidden');
-}
-
-async function loadPlan(){
-  const p=await pco('/services/v2/plans/'+planId);
-  const a=p.data.attributes;
-  document.getElementById('planTitle').textContent=a.series_title||a.title||'Service Plan';
-  const dt=a.sort_date?new Date(a.sort_date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}):'';
-  document.getElementById('planDate').textContent=dt;
+async function loadPlan() {
+  const p = await pco('/services/v2/plans/' + planId);
+  const a = p.data.attributes;
+  document.getElementById('planTitle').textContent = a.series_title || a.title || 'Service Plan';
+  const dt = a.sort_date ? new Date(a.sort_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '';
+  document.getElementById('planDate').textContent = dt;
+  const heroDate = document.getElementById('heroDate');
+  heroDate.innerHTML = `Today's Plan: <span>${dt || 'No plan found for today'}</span>`;
   await loadItems();
 }
 
-async function loadItems(){
-  if(!creds)return;
-  try{
-    const d=await pco('/services/v2/plans/'+planId+'/items?per_page=100');
-    renderROS(d.data||[]);
-    document.getElementById('statusNote').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  }catch(e){console.error(e);}
+async function loadItems() {
+  if (!creds || !planId) return;
+  try {
+    const d = await pco('/services/v2/plans/' + planId + '/items?per_page=100');
+    renderROS(d.data || []);
+    document.getElementById('rosStatusNote').textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } catch (e) { console.error(e); }
 }
 
-function renderROS(items){
-  const w=document.getElementById('itemsWrap');
-  if(!items.length){w.innerHTML='<div class="loading-msg">No items in this plan.</div>';return;}
-  let h='',seq=0;
-  items.forEach(item=>{
-    const a=item.attributes;
-    if(a.item_type==='header'){h+=`<div class="section-label">${esc(a.title||'')}</div>`;return;}
+function fmt(s) { if (!s && s !== 0) return ''; return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function strip(h) { const d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; }
+
+function renderROS(items) {
+  const w = document.getElementById('rosItemsWrap');
+  if (!items.length) { w.innerHTML = '<div class="ros-empty">No items found in this plan.</div>'; return; }
+  let h = '', seq = 0;
+  items.forEach(item => {
+    const a = item.attributes;
+    if (a.item_type === 'header') { h += `<div class="ros-section">${esc(a.title || '')}</div>`; return; }
     seq++;
-    const note=a.html_details?strip(a.html_details).trim().substring(0,200):'';
-    h+=`<div class="item-row"><div class="item-seq">${String(seq).padStart(2,'0')}</div><div><div class="item-name">${esc(a.title||'Untitled')}</div>${a.description?`<div class="item-desc">${esc(a.description)}</div>`:''} ${note?`<span class="item-note">${esc(note)}</span>`:''}</div><div class="item-dur">${fmt(a.length)}</div></div>`;
+    const note = a.html_details ? strip(a.html_details).trim().substring(0, 200) : '';
+    h += `<div class="ros-item"><div class="ros-item-seq">${String(seq).padStart(2, '0')}</div><div><div class="ros-item-name">${esc(a.title || 'Untitled')}</div>${a.description ? `<div class="ros-item-desc">${esc(a.description)}</div>` : ''}${note ? `<span class="ros-item-note">${esc(note)}</span>` : ''}</div><div class="ros-item-dur">${fmt(a.length)}</div></div>`;
   });
-  w.innerHTML=h;
+  w.innerHTML = h;
 }
 
-// NAV
-function showPage(page){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page'+page).classList.add('active');
-  document.getElementById('nav'+page).classList.add('active');
-  if(page==='Checklist')renderCL();
-  if(page==='Admin'&&admAuthed)renderAdmPanel();
+function skipSetup() { creds = null; launchApp(false); }
+
+function launchApp(hasPCO) {
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  if (hasPCO) {
+    document.getElementById('rosNoPCO').classList.add('hidden');
+    document.getElementById('rosLive').classList.remove('hidden');
+    rosTick = setInterval(loadItems, 15000);
+  }
+  // Set date display
+  document.getElementById('dateChip').textContent = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (!document.getElementById('heroDate').innerHTML.includes('Plan')) {
+    document.getElementById('heroDate').textContent = todayStr;
+  }
+  renderAllChecklists();
+  showPage('Home');
 }
 
-// CHECKLIST
-function setDept(d){
-  dept=d;checked={};
-  document.getElementById('dtMedia').className='dept-tab media'+(d==='media'?' active':'');
-  document.getElementById('dtAudio').className='dept-tab audio'+(d==='audio'?' active':'');
-  document.getElementById('doneBanner').style.display='none';
-  document.getElementById('btnSubmit').classList.remove('hidden');
-  renderCL();
+function goSetup() {
+  // For admin use only - reload to reconnect
+  window.location.reload();
 }
 
-function renderCL(){
-  const items=getItems()[dept]||[];
-  const isAudio=dept==='audio';
-  document.getElementById('clBody').innerHTML=items.map((text,i)=>{
-    const on=!!checked[i];
-    return `<div class="check-item${on?' checked '+dept:''}" onclick="toggleCk(${i})"><div class="chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="chk-text">${esc(text)}</div></div>`;
+// ── NAV ──
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + page).classList.add('active');
+  const backBtn = document.getElementById('backBtn');
+  backBtn.classList.toggle('hidden', page === 'Home');
+  window.scrollTo(0, 0);
+}
+
+function goHome() { showPage('Home'); }
+
+// ── CHECKLISTS ──
+function renderAllChecklists() { renderCL('media'); renderCL('audio'); }
+
+function renderCL(dept) {
+  const items = getItems()[dept] || [];
+  const el = document.getElementById(dept + 'Items');
+  const ck = checked[dept] || {};
+  el.innerHTML = items.map((text, i) => {
+    const on = !!ck[i];
+    return `<div class="cl-item${on ? ' done ' + dept : ''}" onclick="toggleCk('${dept}',${i})">
+      <div class="cl-checkbox"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cl-item-text">${esc(text)}</div>
+    </div>`;
   }).join('');
-  const done=Object.values(checked).filter(Boolean).length;
-  const pct=items.length?Math.round(done/items.length*100):0;
-  const fill=document.getElementById('progFill');
-  fill.style.width=pct+'%';
-  fill.className='prog-fill '+(isAudio?'audio':'media');
-  document.getElementById('progLbl').textContent=`${done} of ${items.length} complete`;
+  updateProg(dept, items.length);
 }
 
-function toggleCk(i){checked[i]=!checked[i];renderCL();}
-
-function submitCL(){
-  const svc=document.getElementById('svcSelect').value;
-  const name=document.getElementById('volName').value.trim();
-  const items=getItems()[dept]||[];
-  if(!svc){alert('Please select a service.');return;}
-  if(!name){alert('Please enter your name.');return;}
-  const done=Object.values(checked).filter(Boolean).length;
-  const logs=getLogs();
-  logs.unshift({id:Date.now(),name,service:svc,dept,date:new Date().toLocaleDateString('en-US'),time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),total:items.length,done,complete:done===items.length});
-  ss('gc_logs',logs.slice(0,100));
-  const b=document.getElementById('doneBanner');
-  b.className='done-banner'+(dept==='audio'?' audio':'');
-  b.style.display='block';
-  document.getElementById('doneSubtext').textContent=`${name} · ${svc} · ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
-  document.getElementById('btnSubmit').classList.add('hidden');
+function toggleCk(dept, i) {
+  if (!checked[dept]) checked[dept] = {};
+  checked[dept][i] = !checked[dept][i];
+  renderCL(dept);
 }
 
-function resetCL(){
-  checked={};
-  document.getElementById('doneBanner').style.display='none';
-  document.getElementById('btnSubmit').classList.remove('hidden');
-  renderCL();
+function updateProg(dept, total) {
+  const done = Object.values(checked[dept] || {}).filter(Boolean).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById(dept + 'ProgFill').style.width = pct + '%';
+  document.getElementById(dept + 'ProgText').textContent = `${done} of ${total} complete`;
 }
 
-// ADMIN
-function admLogin(){
-  const p=document.getElementById('admPassIn').value;
-  const err=document.getElementById('admErr');
-  if(p===getPass()){
-    admAuthed=true;err.style.display='none';
+function submitCL(dept) {
+  const svc = document.getElementById(dept + 'Svc').value;
+  const name = document.getElementById(dept + 'Name').value.trim();
+  const items = getItems()[dept] || [];
+  if (!svc) { alert('Please select a service.'); return; }
+  if (!name) { alert('Please enter your name.'); return; }
+  const done = Object.values(checked[dept] || {}).filter(Boolean).length;
+  const logs = getLogs();
+  logs.unshift({ id: Date.now(), name, service: svc, dept, date: today.toLocaleDateString('en-US'), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), total: items.length, done, complete: done === items.length });
+  ss('gc_logs', logs.slice(0, 100));
+  const cap = dept.charAt(0).toUpperCase() + dept.slice(1);
+  document.getElementById(dept + 'Done').style.display = 'block';
+  document.getElementById(dept + 'DoneSub').textContent = `${name} · ${svc} · ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  document.getElementById(dept + 'Submit').classList.add('hidden');
+}
+
+function resetCL(dept) {
+  checked[dept] = {};
+  const cap = dept.charAt(0).toUpperCase() + dept.slice(1);
+  document.getElementById(dept + 'Done').style.display = 'none';
+  document.getElementById(dept + 'Submit').classList.remove('hidden');
+  renderCL(dept);
+}
+
+// ── ADMIN ──
+function admLogin() {
+  const p = document.getElementById('admPassIn').value;
+  const err = document.getElementById('admErr');
+  if (p === getPass()) {
+    admAuthed = true; err.style.display = 'none';
     document.getElementById('admLogin').classList.add('hidden');
     document.getElementById('admPanel').classList.remove('hidden');
-    renderAdmPanel();
-  }else{err.textContent='Incorrect password.';err.style.display='block';}
+    renderAdmItems(); renderLogs();
+  } else { err.textContent = 'Incorrect password.'; err.style.display = 'block'; }
 }
 
-function admLogout(){
-  admAuthed=false;
-  document.getElementById('admPassIn').value='';
+function admLogout() {
+  admAuthed = false;
+  document.getElementById('admPassIn').value = '';
   document.getElementById('admLogin').classList.remove('hidden');
   document.getElementById('admPanel').classList.add('hidden');
 }
 
-function renderAdmPanel(){renderAdmItems();renderLogs();}
-
-function showATab(tab){
-  ['Checkpoints','Logs','Settings'].forEach(t=>{
-    document.getElementById('aTab'+t).classList.toggle('hidden',t!==tab);
-    document.getElementById('at'+t).classList.toggle('active',t===tab);
+function showATab(tab) {
+  ['Checkpoints', 'Logs', 'Settings'].forEach(t => {
+    document.getElementById('aTab' + t).classList.toggle('hidden', t !== tab);
+    document.getElementById('at' + t).classList.toggle('active', t === tab);
   });
-  if(tab==='Logs')renderLogs();
+  if (tab === 'Logs') renderLogs();
 }
 
-function renderAdmItems(){
-  const items=getItems();
-  ['media','audio'].forEach(d=>{
-    const cap=d.charAt(0).toUpperCase()+d.slice(1);
-    const el=document.getElementById('adm'+cap+'List');
-    el.innerHTML=(items[d]||[]).map((t,i)=>
+function renderAdmItems() {
+  const items = getItems();
+  ['media', 'audio'].forEach(d => {
+    const cap = d.charAt(0).toUpperCase() + d.slice(1);
+    const el = document.getElementById('adm' + cap + 'List');
+    el.innerHTML = (items[d] || []).map((t, i) =>
       `<div class="adm-item"><div class="adm-item-text">${esc(t)}</div><button class="adm-del" onclick="delItem('${d}',${i})" title="Remove">×</button></div>`
-    ).join('')||'<div class="no-items">No checkpoints yet.</div>';
+    ).join('') || '<div class="no-items">No checkpoints yet.</div>';
   });
 }
 
-function addItem(d){
-  const cap=d.charAt(0).toUpperCase()+d.slice(1);
-  const input=document.getElementById('new'+cap+'In');
-  const text=input.value.trim();if(!text)return;
-  const items=getItems();
-  items[d]=[...(items[d]||[]),text];
-  ss('gc_items',items);input.value='';renderAdmItems();
+function addItem(d) {
+  const cap = d.charAt(0).toUpperCase() + d.slice(1);
+  const inp = document.getElementById('new' + cap + 'In');
+  const text = inp.value.trim(); if (!text) return;
+  const items = getItems(); items[d] = [...(items[d] || []), text];
+  ss('gc_items', items); inp.value = ''; renderAdmItems(); renderAllChecklists();
 }
 
-function delItem(d,i){
-  if(!confirm('Remove this checkpoint?'))return;
-  const items=getItems();
-  items[d]=items[d].filter((_,idx)=>idx!==i);
-  ss('gc_items',items);renderAdmItems();
+function delItem(d, i) {
+  if (!confirm('Remove this checkpoint?')) return;
+  const items = getItems(); items[d] = items[d].filter((_, idx) => idx !== i);
+  ss('gc_items', items); renderAdmItems(); renderAllChecklists();
 }
 
-function renderLogs(){
-  const logs=getLogs();
-  const el=document.getElementById('logsList');
-  if(!logs.length){el.innerHTML='<div class="no-items" style="padding:1rem 0;text-align:center">No submissions yet.</div>';return;}
-  el.innerHTML=logs.map(l=>`<div class="log-entry"><div class="log-top"><div class="log-name">${esc(l.name)}</div><span class="log-badge ${l.dept}">${l.dept}</span></div><div class="log-meta">${esc(l.service)} · ${l.date} at ${l.time}</div><div class="log-prog">${l.done}/${l.total} completed${l.complete?' ✓':''}</div></div>`).join('');
+function renderLogs() {
+  const logs = getLogs(); const el = document.getElementById('logsList');
+  if (!logs.length) { el.innerHTML = '<div class="no-items" style="text-align:center;padding:2rem">No submissions yet.</div>'; return; }
+  el.innerHTML = logs.map(l => `<div class="log-entry"><div class="log-top"><div class="log-name">${esc(l.name)}</div><span class="log-badge ${l.dept}">${l.dept}</span></div><div class="log-meta">${esc(l.service)} · ${l.date} at ${l.time}</div><div class="log-prog">${l.done}/${l.total} completed${l.complete ? ' ✓' : ''}</div></div>`).join('');
 }
 
-function changePass(){
-  const np=document.getElementById('newPassIn').value;
-  const cp=document.getElementById('confPassIn').value;
-  const err=document.getElementById('passErr');const suc=document.getElementById('passSuc');
-  err.style.display='none';suc.style.display='none';
-  if(!np){err.textContent='Enter a new password.';err.style.display='block';return;}
-  if(np!==cp){err.textContent="Passwords don't match.";err.style.display='block';return;}
-  ss('gc_pass',np);
-  suc.textContent='Password updated.';suc.style.display='block';
-  document.getElementById('newPassIn').value='';document.getElementById('confPassIn').value='';
+function changePass() {
+  const np = document.getElementById('newPassIn').value;
+  const cp = document.getElementById('confPassIn').value;
+  const err = document.getElementById('passErr'); const suc = document.getElementById('passSuc');
+  err.style.display = 'none'; suc.style.display = 'none';
+  if (!np) { err.textContent = 'Enter a new password.'; err.style.display = 'block'; return; }
+  if (np !== cp) { err.textContent = "Passwords don't match."; err.style.display = 'block'; return; }
+  ss('gc_pass', np); suc.textContent = 'Password updated successfully.'; suc.style.display = 'block';
+  document.getElementById('newPassIn').value = ''; document.getElementById('confPassIn').value = '';
 }
 
-// INIT
-window.addEventListener('load',()=>{
-  const saved=gs('gc_creds',null);
-  if(saved&&saved.id){
-    creds=saved;planId=gs('gc_plan','87852859');
-    launchApp(true);
-    loadPlan();
-  }
-  renderCL();
+// ── INIT ── auto-launch with PCO, no credentials needed from volunteers
+window.addEventListener('load', () => {
+  // Always launch with PCO - credentials are server-side
+  launchApp(true);
+  renderAllChecklists();
 });
 </script>
 </body>
