@@ -649,21 +649,17 @@ async function findTodaysPlan() {
   );
   const targetTypes = match ? [match] : serviceTypes;
 
-  // Load 5 upcoming plans (include recent past so today's is visible)
+  // Load 5 upcoming plans from today forward
   for (const st of targetTypes) {
-    const plansData = await pco(`/services/v2/service_types/${st.id}/plans?order=sort_date&per_page=10`);
+    // filter=future gets plans from today forward, order=sort_date ascending
+    const plansData = await pco(`/services/v2/service_types/${st.id}/plans?filter=future&order=sort_date&per_page=5`);
     const plans = plansData.data || [];
     if (plans.length) {
-      // Get the 5 most relevant: closest to today
-      const sorted = plans.sort((a, b) => new Date(a.attributes.sort_date) - new Date(b.attributes.sort_date));
-      const now = new Date();
-      // Find index of first plan on or after today
-      let startIdx = sorted.findIndex(p => new Date(p.attributes.sort_date) >= new Date(todayISO));
-      if (startIdx < 0) startIdx = Math.max(0, sorted.length - 5);
-      // Include one past plan if available so today shows current
-      startIdx = Math.max(0, startIdx - 1);
-      allPlans = sorted.slice(startIdx, startIdx + 5);
-      // Default to today's plan or next upcoming
+      allPlans = plans;
+      // Default to the first plan (closest to today)
+      activePlanIdx = 0;
+      // Check if first plan is actually today
+      const firstDate = allPlans[0].attributes.sort_date || '';
       activePlanIdx = allPlans.findIndex(p => p.attributes.sort_date && p.attributes.sort_date.startsWith(todayISO));
       if (activePlanIdx < 0) activePlanIdx = 0;
       planId = allPlans[activePlanIdx].id;
