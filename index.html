@@ -196,6 +196,10 @@ button{cursor:pointer;border:none;background:none;}
 .log-meta{font-size:12px;color:var(--text2);}
 .log-prog{font-size:12px;color:var(--green);margin-top:3px;font-weight:500;}
 .no-items{font-size:13px;color:var(--text3);font-style:italic;padding:8px 0;}
+.ptab-week-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:10px 4px 4px;white-space:nowrap;align-self:flex-end;}
+.plan-tabs-scroll{flex-wrap:nowrap;align-items:flex-end;}
+.ptab .ptab-day{font-size:12px;font-weight:600;}
+.ptab .ptab-date{font-size:11px;}
 </style>
 </head>
 <body>
@@ -243,6 +247,22 @@ button{cursor:pointer;border:none;background:none;}
             <div>
               <div class="hcard-label">Audio Checklist</div>
               <div class="hcard-desc">Board, mics, amp &amp; scene check</div>
+            </div>
+            <div class="hcard-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="hcard wide" onclick="showPage('Notes')">
+            <div class="hcard-icon" style="background:#f3e8ff;">📄</div>
+            <div>
+              <div class="hcard-label">Sermon Notes</div>
+              <div class="hcard-desc">Weekend message outline &amp; notes</div>
+            </div>
+            <div class="hcard-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="hcard wide" onclick="showPage('SOPs')">
+            <div class="hcard-icon" style="background:#e0f2fe;">📘</div>
+            <div>
+              <div class="hcard-label">Standard Procedures</div>
+              <div class="hcard-desc">Audio &amp; media SOPs by location</div>
             </div>
             <div class="hcard-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
@@ -346,6 +366,39 @@ button{cursor:pointer;border:none;background:none;}
       </div>
     </div>
 
+    <!-- SERMON NOTES -->
+    <div class="page" id="pageNotes">
+      <div style="padding:16px;">
+        <div style="background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:18px;margin-bottom:14px;box-shadow:var(--shadow-sm);">
+          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Weekend Sermon Notes</div>
+          <div style="font-size:18px;font-weight:700;margin-bottom:3px;" id="notesWeekLabel">—</div>
+          <div style="font-size:13px;color:var(--text2);" id="notesWeekDate"></div>
+        </div>
+        <div id="notesEmbed" style="background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);min-height:300px;display:flex;align-items:center;justify-content:center;">
+          <div style="text-align:center;padding:2rem;color:var(--text3);">
+            <div style="font-size:36px;margin-bottom:12px;">📄</div>
+            <div style="font-size:14px;font-weight:500;margin-bottom:6px;">No sermon notes yet</div>
+            <div style="font-size:12px;">A team lead can add the Google Drive link in Admin → Notes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOPs -->
+    <div class="page" id="pageSOPs">
+      <div style="padding:16px;">
+        <!-- Dept tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <button class="sop-dept-tab active" id="sopTabAudio" onclick="setSopDept('audio')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--blue-light);border-color:var(--blue-border);color:var(--blue);font-size:14px;font-weight:600;">🎚 Audio</button>
+          <button class="sop-dept-tab" id="sopTabMedia" onclick="setSopDept('media')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-size:14px;font-weight:600;">📽 Media</button>
+        </div>
+        <!-- Location tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;" id="sopLocTabs"></div>
+        <!-- Embed -->
+        <div id="sopEmbed" style="background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);"></div>
+      </div>
+    </div>
+
     <!-- ADMIN -->
     <div class="page" id="pageAdmin">
       <div id="admLogin" class="adm-login">
@@ -363,6 +416,16 @@ button{cursor:pointer;border:none;background:none;}
           <button class="adm-tab" id="atSettings" onclick="showATab('Settings')">Settings</button>
         </div>
         <div id="aTabCheckpoints">
+          <div class="adm-section">
+            <div class="adm-head">📄 Weekend Sermon Notes</div>
+            <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Paste a Google Drive link to the sermon notes doc. Use File → Share → Anyone with the link can view, then copy the link.</p>
+            <div id="notesLinksList"></div>
+            <div class="add-row">
+              <input type="text" id="notesWeekIn" placeholder="Week label e.g. May 17-18" style="max-width:140px;flex:none;"/>
+              <input type="text" id="notesLinkIn" placeholder="Google Drive link..." style="flex:1;" onkeydown="if(event.key==='Enter')addNotesLink()"/>
+              <button class="btn-add" onclick="addNotesLink()">Add</button>
+            </div>
+          </div>
           <div class="adm-section">
             <div class="adm-head">📽 Media Checkpoints</div>
             <div id="admMediaList"></div>
@@ -408,6 +471,12 @@ button{cursor:pointer;border:none;background:none;}
     </button>
     <button class="nav-btn" id="navAudioCL" onclick="showPage('AudioCL')">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Audio
+    </button>
+    <button class="nav-btn" id="navNotes" onclick="showPage('Notes')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Notes
+    </button>
+    <button class="nav-btn" id="navSOPs" onclick="showPage('SOPs')">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>SOPs
     </button>
   </nav>
 </div>
@@ -468,7 +537,6 @@ async function pco(path) {
 
 // ── LOAD PLANS ──
 async function loadAllPlans() {
-  // Get service types, find Avon weekend worship
   const stData = await pco('/services/v2/service_types?per_page=25');
   const serviceTypes = stData.data || [];
   if (!serviceTypes.length) throw new Error('No service types found');
@@ -479,18 +547,40 @@ async function loadAllPlans() {
   });
   const target = match || serviceTypes[0];
 
-  // Get upcoming plans, filter to Sat & Sun only
-  const plansData = await pco('/services/v2/service_types/' + target.id + '/plans?filter=future&order=sort_date&per_page=20');
+  const plansData = await pco('/services/v2/service_types/' + target.id + '/plans?filter=future&order=sort_date&per_page=30');
   const plans = plansData.data || [];
 
-  // Filter to weekend only (Sat=6, Sun=0 UTC)
+  // Filter to Sat (6) and Sun (0) only
   const weekend = plans.filter(p => {
     if (!p.attributes.sort_date) return false;
     const day = new Date(p.attributes.sort_date).getUTCDay();
     return day === 0 || day === 6;
   });
 
-  allPlans = (weekend.length ? weekend : plans).slice(0, 5);
+  // Group into weekends (Sat+Sun pairs) — take up to 5 weekends
+  const weekends = [];
+  const seen = {};
+  for (const p of weekend) {
+    const d = new Date(p.attributes.sort_date);
+    const day = d.getUTCDay();
+    // Get the Saturday of this week as the weekend key
+    const sat = new Date(d);
+    if (day === 0) sat.setUTCDate(sat.getUTCDate() - 1); // Sun → back 1 to Sat
+    const key = sat.toISOString().split('T')[0];
+    if (!seen[key]) { seen[key] = { sat: null, sun: null, key }; weekends.push(seen[key]); }
+    if (day === 6) seen[key].sat = p;
+    else seen[key].sun = p;
+    if (weekends.length >= 5 && seen[key].sat && seen[key].sun) break;
+  }
+
+  // Flatten into allPlans keeping Sat before Sun, max 5 weekends
+  allPlans = [];
+  weekendGroups = weekends.slice(0, 5);
+  for (const wk of weekendGroups) {
+    if (wk.sat) allPlans.push(wk.sat);
+    if (wk.sun) allPlans.push(wk.sun);
+  }
+
   if (!allPlans.length) throw new Error('No upcoming plans found');
 
   // Default to today or first plan
@@ -568,18 +658,35 @@ function renderPlanTabs() {
   const wrap = document.getElementById('planTabsWrap');
   if (!wrap) return;
   if (!allPlans.length) { wrap.innerHTML = ''; return; }
-  wrap.innerHTML = allPlans.map((p, i) => {
+
+  // Group tabs by weekend
+  let html = '';
+  let lastWeekKey = null;
+  allPlans.forEach((p, i) => {
     const d = p.attributes.sort_date ? new Date(p.attributes.sort_date) : null;
+    const day = d ? d.getUTCDay() : -1;
     const isToday = p.attributes.sort_date && p.attributes.sort_date.startsWith(todayISO);
     const dateLabel = d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Plan ' + (i + 1);
-    const dayLabel = d ? d.toLocaleDateString('en-US', { weekday: 'short' }) : '';
+    const dayLabel = d ? d.toLocaleDateString('en-US', { weekday: 'long' }) : '';
     const active = i === activePlanIdx ? ' active' : '';
-    return '<button class="ptab' + active + '" onclick="switchPlan(' + i + ')">'
-      + '<span class="ptab-date">' + dateLabel + '</span>'
+
+    // Add weekend divider label
+    const sat = new Date(d || new Date());
+    if (day === 0) sat.setUTCDate(sat.getUTCDate() - 1);
+    const weekKey = sat.toISOString().split('T')[0];
+    if (weekKey !== lastWeekKey) {
+      const weekLabel = sat.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      html += '<div class="ptab-week-label">Week of ' + weekLabel + '</div>';
+      lastWeekKey = weekKey;
+    }
+
+    html += '<button class="ptab' + active + '" onclick="switchPlan(' + i + ')">'
       + '<span class="ptab-day">' + dayLabel + '</span>'
+      + '<span class="ptab-date">' + dateLabel + '</span>'
       + (isToday ? '<span class="ptab-today">Today</span>' : '')
       + '</button>';
-  }).join('');
+  });
+  wrap.innerHTML = html;
 }
 
 async function switchPlan(idx) {
@@ -628,6 +735,8 @@ function showPage(page) {
   document.getElementById('backBtn').classList.toggle('hidden', page === 'Home');
   window.scrollTo(0, 0);
   if (page === 'Admin' && admAuthed) renderAdmPanel();
+  if (page === 'Notes') renderNotesPage();
+  if (page === 'SOPs') { renderSopLocTabs(); renderSopEmbed(); }
 }
 
 function goHome() { showPage('Home'); }
@@ -710,7 +819,7 @@ function admLogout() {
   document.getElementById('admPanel').classList.add('hidden');
 }
 
-function renderAdmPanel() { renderAdmItems(); renderLogs(); }
+function renderAdmPanel() { renderAdmItems(); renderLogs(); renderNotesLinks(); }
 
 function showATab(tab) {
   ['Checkpoints', 'Logs', 'Settings'].forEach(t => {
@@ -775,12 +884,157 @@ function changePass() {
   document.getElementById('confPassIn').value = '';
 }
 
+// ── SERMON NOTES ──
+function getNotesLinks() { return gs('gc_notes', []); }
+
+function addNotesLink() {
+  const week = document.getElementById('notesWeekIn').value.trim();
+  const link = document.getElementById('notesLinkIn').value.trim();
+  if (!week || !link) { alert('Please enter both a week label and a Google Drive link.'); return; }
+  const driveLink = convertDriveLink(link);
+  const notes = getNotesLinks();
+  // Remove existing entry for same week
+  const filtered = notes.filter(n => n.week !== week);
+  filtered.unshift({ week, link: driveLink, raw: link });
+  ss('gc_notes', filtered.slice(0, 10));
+  document.getElementById('notesWeekIn').value = '';
+  document.getElementById('notesLinkIn').value = '';
+  renderNotesLinks();
+}
+
+function convertDriveLink(url) {
+  // Convert Google Drive share link to embeddable preview link
+  // Docs: /document/d/ID/edit → /document/d/ID/preview
+  // PDF: /file/d/ID/view → /file/d/ID/preview
+  const docMatch = url.match(/\/document\/d\/([a-zA-Z0-9_-]+)/);
+  if (docMatch) return 'https://docs.google.com/document/d/' + docMatch[1] + '/preview';
+  const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileMatch) return 'https://drive.google.com/file/d/' + fileMatch[1] + '/preview';
+  // Already an embed or unknown — return as-is
+  return url;
+}
+
+function renderNotesLinks() {
+  const notes = getNotesLinks();
+  const el = document.getElementById('notesLinksList');
+  if (!el) return;
+  if (!notes.length) { el.innerHTML = '<div class="no-items">No sermon notes added yet.</div>'; return; }
+  el.innerHTML = notes.map((n, i) =>
+    '<div class="adm-item">'
+    + '<div class="adm-item-text"><strong>' + esc(n.week) + '</strong><br><span style="font-size:11px;color:var(--text3)">' + esc(n.raw || n.link) + '</span></div>'
+    + '<button class="adm-del" onclick="delNote(' + i + ')" title="Remove">×</button>'
+    + '</div>'
+  ).join('');
+  renderNotesPage();
+}
+
+function delNote(i) {
+  if (!confirm('Remove this sermon notes link?')) return;
+  const notes = getNotesLinks();
+  notes.splice(i, 1);
+  ss('gc_notes', notes);
+  renderNotesLinks();
+}
+
+function renderNotesPage() {
+  // Show the most recent/relevant notes entry
+  const notes = getNotesLinks();
+  const weekLabel = document.getElementById('notesWeekLabel');
+  const weekDate = document.getElementById('notesWeekDate');
+  const embed = document.getElementById('notesEmbed');
+  if (!embed) return;
+
+  if (!notes.length) {
+    if (weekLabel) weekLabel.textContent = 'No notes added yet';
+    if (weekDate) weekDate.textContent = '';
+    embed.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text3);"><div style="font-size:36px;margin-bottom:12px;">📄</div><div style="font-size:14px;font-weight:500;margin-bottom:6px;">No sermon notes yet</div><div style="font-size:12px;">A team lead can add the Google Drive link in Admin → Checkpoints</div></div>';
+    return;
+  }
+
+  const current = notes[0];
+  if (weekLabel) weekLabel.textContent = current.week;
+  if (weekDate) weekDate.textContent = 'Tap the link below to open in Google Drive if the preview doesn't load';
+  embed.innerHTML = '<iframe src="' + esc(current.link) + '" style="width:100%;height:600px;border:none;" allowfullscreen></iframe>'
+    + '<div style="padding:12px 16px;border-top:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between;">'
+    + '<span style="font-size:12px;color:var(--text2);">' + esc(current.week) + ' · Sermon Notes</span>'
+    + '<a href="' + esc(current.link) + '" target="_blank" style="font-size:12px;color:var(--gold);font-weight:600;text-decoration:none;">Open in Drive ↗</a>'
+    + '</div>';
+}
+
+// ── SOPs ──
+const DEFAULT_SOPS = {
+  audio: [
+    { location: 'Avon', embed: 'https://docs.google.com/document/d/1jEjS9q8meGkELICE4-8PcxEwvJ4GBOps/preview', raw: 'https://docs.google.com/document/d/1jEjS9q8meGkELICE4-8PcxEwvJ4GBOps/edit?usp=sharing' },
+    { location: 'Braintree', embed: 'https://docs.google.com/document/d/1lrMs0Rkaszu0gu_bPvWMSw8bRww86xGS3AbfTPGKzJo/preview', raw: 'https://docs.google.com/document/d/1lrMs0Rkaszu0gu_bPvWMSw8bRww86xGS3AbfTPGKzJo/edit?usp=sharing' }
+  ],
+  media: []
+};
+
+let sopDept = 'audio';
+let sopLocIdx = 0;
+
+function getSops() { return gs('gc_sops', JSON.parse(JSON.stringify(DEFAULT_SOPS))); }
+
+function setSopDept(dept) {
+  sopDept = dept;
+  sopLocIdx = 0;
+  document.getElementById('sopTabAudio').style.background = dept === 'audio' ? 'var(--blue-light)' : 'var(--surface)';
+  document.getElementById('sopTabAudio').style.borderColor = dept === 'audio' ? 'var(--blue-border)' : 'var(--border)';
+  document.getElementById('sopTabAudio').style.color = dept === 'audio' ? 'var(--blue)' : 'var(--text2)';
+  document.getElementById('sopTabMedia').style.background = dept === 'media' ? 'var(--gold-light)' : 'var(--surface)';
+  document.getElementById('sopTabMedia').style.borderColor = dept === 'media' ? 'var(--gold-border, var(--gold-mid))' : 'var(--border)';
+  document.getElementById('sopTabMedia').style.color = dept === 'media' ? 'var(--gold)' : 'var(--text2)';
+  renderSopLocTabs();
+  renderSopEmbed();
+}
+
+function renderSopLocTabs() {
+  const sops = getSops();
+  const list = sops[sopDept] || [];
+  const wrap = document.getElementById('sopLocTabs');
+  if (!wrap) return;
+  if (!list.length) {
+    wrap.innerHTML = '<div style="font-size:13px;color:var(--text3);font-style:italic;">No SOPs added yet for this department.</div>';
+    return;
+  }
+  wrap.innerHTML = list.map((s, i) => {
+    const active = i === sopLocIdx;
+    return '<button onclick="setSopLoc(' + i + ')" style="flex-shrink:0;padding:8px 16px;border-radius:8px;border:1.5px solid ' + (active ? 'var(--gold-mid)' : 'var(--border)') + ';background:' + (active ? 'var(--gold-light)' : 'var(--surface)') + ';color:' + (active ? 'var(--gold)' : 'var(--text2)') + ';font-size:13px;font-weight:600;white-space:nowrap;">'
+      + s.location + '</button>';
+  }).join('');
+}
+
+function setSopLoc(idx) {
+  sopLocIdx = idx;
+  renderSopLocTabs();
+  renderSopEmbed();
+}
+
+function renderSopEmbed() {
+  const sops = getSops();
+  const list = sops[sopDept] || [];
+  const embed = document.getElementById('sopEmbed');
+  if (!embed) return;
+  if (!list.length) {
+    embed.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text3);"><div style="font-size:36px;margin-bottom:12px;">📘</div><div style="font-size:14px;font-weight:500;margin-bottom:6px;">No SOPs yet</div><div style="font-size:12px;">Team leads can add SOP links in Admin</div></div>';
+    return;
+  }
+  const sop = list[Math.min(sopLocIdx, list.length - 1)];
+  embed.innerHTML = '<iframe src="' + sop.embed + '" style="width:100%;height:620px;border:none;" allowfullscreen></iframe>'
+    + '<div style="padding:12px 16px;border-top:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between;">'
+    + '<span style="font-size:12px;color:var(--text2);">' + esc(sop.location) + ' · ' + (sopDept === 'audio' ? 'Audio' : 'Media') + ' SOP</span>'
+    + '<a href="' + sop.raw + '" target="_blank" style="font-size:12px;color:var(--gold);font-weight:600;text-decoration:none;">Open in Drive ↗</a>'
+    + '</div>';
+}
+
 // ── INIT ──
 window.addEventListener('load', () => {
   document.getElementById('app').style.display = 'flex';
   document.getElementById('dateChip').textContent = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   renderCL('media');
   renderCL('audio');
+  renderNotesLinks();
+  renderNotesPage();
 
   loadAllPlans()
     .then(() => { rosTick = setInterval(autoRefresh, 30000); })
